@@ -3,7 +3,7 @@ import logging
 from botocore.exceptions import ClientError
 import os
 
-logging.getLogger().setLevel{logging.INFO}
+logging.getLogger().setLevel(logging.INFO)
 cloudformation_client = boto3.client('cloudformation')
 
 def create_stack(stack_name, template_body, **kwargs):
