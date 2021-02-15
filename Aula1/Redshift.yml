@@ -1,0 +1,99 @@
+##Meu primeiro bucket
+##Atividades
+##Criar Cluster Redshift via template
+##Navegar da documentação do Redshift - https://docs.aws.amazon.com/pt_br/AWSCloudFormation/latest/UserGuide/aws-resource-redshift-cluster.html
+##Testar acesso
+##Modificar para permitir acesso somente de endereços IP's específicos
+
+Resources:
+  RedshiftCluster:
+    Type: AWS::Redshift::Cluster
+    Properties:
+      AllowVersionUpgrade: True
+      AutomatedSnapshotRetentionPeriod: 5
+      ClusterIdentifier: meu-primeiro-cluster
+      ClusterParameterGroupName: !Ref RedshiftParameterGroup
+      VpcSecurityGroupIds:
+        - !Ref RedshiftEC2SecurityGroup
+      ClusterSubnetGroupName: !Ref RedshiftSubnetGroup
+      ClusterType: multi-node #required
+      DBName: test #required
+      Encrypted: True
+      MasterUserPassword: Admin1234 #required
+      MasterUsername: admin #required
+      NodeType: dc2.large #required
+      NumberOfNodes: 2
+      PubliclyAccessible: True
+
+
+
+  RedshiftParameterGroup:
+    Type: AWS::Redshift::ClusterParameterGroup
+    Properties:
+      Description: Parameter group for redshift cluster #required
+      ParameterGroupFamily: redshift-1.0 #required
+      Parameters:
+        - ParameterName: max_concurrency_scaling_clusters #Não quero escalonar o cluster
+          ParameterValue: 0
+
+  RedshiftSubnetGroup:
+    Type: AWS::Redshift::ClusterSubnetGroup
+    Properties:
+      Description: Redshift Subnet Group #required
+      SubnetIds: #required
+        - !Ref RedshiftSubnet
+
+  RedshiftSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/24 #required
+      VpcId: !Ref RedshiftVPC
+
+  RedshiftVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16 #required
+
+  RedshiftEC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for Redshift. Public Acess #required
+      GroupName: redshift-security-group
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 5439
+          IpProtocol: tcp
+          ToPort: 5439
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 5439
+          IpProtocol: tcp
+          ToPort: 5439
+      VpcId: !Ref RedshiftVPC
+
+  RedshiftVPCInternetGateway:
+      Type: AWS::EC2::InternetGateway
+      
+  RedshiftVPCAttachGateway:
+      Type: AWS::EC2::VPCGatewayAttachment
+      Properties:
+        VpcId: !Ref RedshiftVPC
+        InternetGatewayId: !Ref RedshiftVPCInternetGateway
+
+  RedshiftRouteTable:
+      Type: AWS::EC2::RouteTable
+      Properties:
+        VpcId: !Ref RedshiftVPC
+
+  RedshiftVPCRoute:
+      Type: AWS::EC2::Route
+      Properties:
+        DestinationCidrBlock: 0.0.0.0/0
+        GatewayId: !Ref RedshiftVPCInternetGateway
+        RouteTableId: !Ref RedshiftRouteTable
+
+  RedshiftSubnetRouteTableAssociation:
+      Type: AWS::EC2::SubnetRouteTableAssociation
+      Properties:
+        RouteTableId: !Ref RedshiftRouteTable
+        SubnetId: !Ref RedshiftSubnet

@@ -1,0 +1,15 @@
+##Meu primeiro bucket
+##Atividades
+##Criar bucket no S3 via template
+##Navegar na documentação do CF - https://docs.aws.amazon.com/pt_br/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket.html
+##Deploy, update y delete usando o console
+
+Resources:
+    meuprimeirobucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: primeiro-bucket-s3-CI
+        BucketEncryption:
+            ServerSideEncryptionConfiguration:
+                - ServerSideEncryptionByDefault:
+                    SSEAlgorithm: AES256
