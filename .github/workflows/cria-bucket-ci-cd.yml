@@ -1,4 +1,5 @@
-##Corrigir IAM Atribuição regras cloudformation
+##Corrigir IAM Atribuição regras cloudformation apaga 
+##Apaga stack
 name: Deploy S3 Bucket
 
 on:
