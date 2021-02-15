@@ -1,4 +1,4 @@
-##Corrigir IAM
+##Corrigir IAM Atribuição regras cloudformation
 name: Deploy S3 Bucket
 
 on:
