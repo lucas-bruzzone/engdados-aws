@@ -8,7 +8,7 @@ Resources:
     meuprimeirobucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: primeiro-bucket-s3-CI
+        BucketName: primeiro-bucket-s3-ci
         BucketEncryption:
             ServerSideEncryptionConfiguration:
                 - ServerSideEncryptionByDefault:
