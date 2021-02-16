@@ -122,7 +122,7 @@ Resources:
             Action:
               - sts:AssumeRole
       Path: "/"
-      RoleName: iam-{{ ENVIRONMENT }}-redshift-role
+      RoleName: iam-group-data-engineer
 
   RedshiftSpectrumPolicy:
     Type: AWS::IAM::Policy
