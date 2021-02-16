@@ -3,7 +3,7 @@ name: Deploy S3 bucket
 on:
   push:
     branches:
-      - 2.jinja_staging
+      - jinja_staging
 
 jobs:
   deploy:
@@ -32,4 +32,4 @@ jobs:
         redshiftClusterMasterUserPassword: ${{ secrets.redshiftClusterMasterUserPassword }}
         ENVIRONMENT: staging
       run: |
-        python turma_2/2_integracao_continua_e_testes/2.jinja/deploy.py
+        python Aula2/Jinja/deploy.py
